@@ -7,6 +7,10 @@ swipEntry = namedtuple('swipEntry', ['Subnet', 'Name'])
 listOfNetNames = []
 listOfSwipEntries = []
 
+
+def sortAddresses(address):
+    return address.Subnet
+
 # Gather list of ARIN NET-ID's from each CENIC parent block
 for address in cenicBlocks:
     resp = requests.get('http://whois.arin.net/rest/cidr/%s/more' % address)
@@ -43,5 +47,5 @@ for address in listOfNetNames:
         listOfSwipEntries.append(swe)
 
 # Print list of SWIP'd subnets, along with the organization or customer name
-for swe in sorted(listOfSwipEntries):
-    print swe.Subnet, swe.Name
+for entry in sorted(listOfSwipEntries, key=sortAddresses):
+    print entry.Subnet, entry.Name
